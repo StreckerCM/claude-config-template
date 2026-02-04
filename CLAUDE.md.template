@@ -1,0 +1,192 @@
+# CLAUDE.md
+
+This file provides guidance to Claude Code (claude.ai/code) when working with code in this repository.
+
+## Project Overview
+
+{{PROJECT_DESCRIPTION}}
+
+**Tech Stack:** {{TECH_STACK}}
+
+## Build Commands
+
+```bash
+# Build
+{{BUILD_COMMAND}}
+
+# Run tests
+{{TEST_COMMAND}}
+```
+
+## Branching Strategy
+
+```
+{{MAIN_BRANCH}} ←──────── Stable releases
+  ↑
+  │ PR merge
+  │
+{{PREVIEW_BRANCH}} ←───── Pre-release testing
+  ↑
+  │ PR merge
+  │
+feature/* ─────────── Development work
+```
+
+### Branch Guidelines
+
+| Branch | Purpose |
+|--------|---------|
+| `{{MAIN_BRANCH}}` | Production releases only |
+| `{{PREVIEW_BRANCH}}` | Integration testing before release |
+| `feature/*` | Feature development |
+
+### Workflow
+1. Create feature branches from `{{DEFAULT_BRANCH}}`
+2. PR feature branches to `{{PREVIEW_BRANCH}}` for integration
+3. PR `{{PREVIEW_BRANCH}}` to `{{MAIN_BRANCH}}` for releases
+
+## Architecture
+
+<!-- Add project-specific architecture here -->
+
+## Development Workflow
+
+### MANDATORY: Ralph Loop for ALL Feature Work
+
+**This is NON-NEGOTIABLE.** Every feature branch (`feature/*`) MUST use the Ralph Wiggum loop (`/ralph-loop`) with rotating personas. There are NO exceptions to this rule, regardless of how simple the task appears.
+
+**Before writing ANY code on a feature branch, you MUST:**
+
+1. Verify a `docs/features/<feature>/tasks.md` file exists
+2. If it doesn't exist, create one before proceeding
+3. Start a Ralph Loop with the rotating persona pattern
+
+**If you find yourself on a feature branch writing code without an active Ralph Loop, STOP and start one.**
+
+### Step 1: Create a GitHub Issue (if one doesn't exist)
+
+Every feature must have a corresponding GitHub issue before work begins.
+
+### Step 2: Create and Switch to a Feature Branch
+
+```bash
+git checkout {{DEFAULT_BRANCH}}
+git pull origin {{DEFAULT_BRANCH}}
+git checkout -b feature/<issue-number>-<short-description>
+```
+
+### Step 3: Create or Verify tasks.md (GATE - Required Before Any Code)
+
+Every feature MUST have a `docs/features/<feature>/tasks.md` file. This file is the **single source of truth** for what work needs to be done. No code should be written until this file exists and has been reviewed.
+
+**tasks.md format:**
+```markdown
+# Feature: <Feature Name>
+Issue: #<issue-number>
+Branch: feature/<issue-number>-<short-description>
+
+## Tasks
+- [ ] Task 1 description
+- [ ] Task 2 description
+- [ ] Task 3 description
+
+## Completion Criteria
+- [ ] All tasks checked
+- [ ] Build succeeds
+- [ ] Tests pass
+- [ ] 2 clean Ralph Loop cycles
+```
+
+### Step 4: Start a Ralph Loop (MANDATORY)
+
+Use the Ralph Wiggum loop with the rotating persona pattern defined in `docs/prompts/PERSONAS.md`:
+
+```bash
+/ralph-loop "
+Feature: <feature-name>
+Branch: feature/<issue-number>-<short-description>
+
+PHASE 1 - TASK COMPLETION:
+- Read docs/features/<feature>/tasks.md
+- Complete unchecked tasks, mark done with [x]
+- Run: {{BUILD_COMMAND}}
+
+PHASE 2 - ROTATING PERSONA REVIEW (ITERATION MOD 6):
+[0] #5 IMPLEMENTER: Complete next task, follow patterns
+[1] #9 REVIEWER: Review code for bugs/issues, fix problems
+[2] #7 TESTER: Verify functionality, add tests
+[3] #3 UI_UX_DESIGNER: Review UI/UX, accessibility
+[4] #10 SECURITY: Check for vulnerabilities, validate inputs
+[5] #2 PROJECT_MANAGER: Verify requirements met, update tasks
+
+EACH ITERATION:
+1. Run current persona's checks (Iteration % 6)
+2. Make fixes/improvements
+3. Commit: '[PERSONA] description'
+4. Post PR comment with findings/changes
+
+OUTPUT <promise>FEATURE COMPLETE</promise> when all tasks done and 2 clean cycles.
+" --completion-promise "FEATURE COMPLETE" --max-iterations 30
+```
+
+See the "Ralph Loop / Iterative Development" section below for the full pattern and completion criteria.
+
+## Key Patterns
+
+<!-- Add project-specific patterns here -->
+
+## Platform Constraints
+
+<!-- Add project-specific constraints here -->
+
+## Ralph Loop / Iterative Development
+
+**MANDATORY — NO EXCEPTIONS:** ALL feature branch work (`feature/*`) MUST use Ralph loops with rotating personas. This applies regardless of feature size, complexity, or urgency. Skipping the Ralph Loop is never acceptable.
+
+### Pre-Flight Checklist (Before Starting Ralph Loop)
+
+Before starting any Ralph Loop, verify:
+
+- [ ] GitHub issue exists for this feature
+- [ ] Feature branch created from `{{DEFAULT_BRANCH}}`
+- [ ] `docs/features/<feature>/tasks.md` exists with task breakdown
+- [ ] PR created (draft is fine) to track work
+
+If any of these are missing, create them first. **Do NOT start coding without tasks.md.**
+
+### Required Persona Rotation
+
+```
+Iteration % 6 determines the current persona:
+
+[0] #5 IMPLEMENTER   - Complete tasks, write code
+[1] #9 REVIEWER      - Review for bugs, code quality
+[2] #7 TESTER        - Verify functionality, add tests
+[3] #3 UI_UX_DESIGNER - Review UI/UX, accessibility
+[4] #10 SECURITY     - Security review, input validation
+[5] #2 PROJECT_MGR   - Check requirements, update tasks
+```
+
+### Each Iteration Must:
+1. Identify the current persona based on iteration number
+2. Follow that persona's mindset and output format from `docs/prompts/PERSONAS.md`
+3. Commit with persona prefix: `[IMPLEMENTER]`, `[REVIEWER]`, etc.
+4. Reference the feature's `tasks.md` file and mark tasks complete
+5. Post a PR comment summarizing findings and changes
+
+### Completion Criteria
+- All tasks in `docs/features/[feature]/tasks.md` marked complete
+- Build succeeds with no errors
+- Tests pass
+- **2 clean cycles** (all 6 personas find no issues twice)
+
+### Why This Matters
+
+The Ralph Loop ensures:
+- Multiple perspectives review every change (code quality, security, UX, testing)
+- Issues are caught early through systematic rotation
+- Progress is tracked via tasks.md
+- An audit trail exists via PR comments from each persona
+- Features meet a consistent quality bar before merging
+
+See `docs/prompts/README.md` and `docs/prompts/templates/ROTATING_FEATURE.md` for full documentation.
