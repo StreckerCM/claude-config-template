@@ -45,6 +45,13 @@ feature/* ─────────── Development work
 2. PR feature branches to `{{PREVIEW_BRANCH}}` for integration
 3. PR `{{PREVIEW_BRANCH}}` to `{{MAIN_BRANCH}}` for releases
 
+### Branch Protection Rules — NEVER VIOLATE
+
+- **NEVER commit directly to `{{MAIN_BRANCH}}`{{PREVIEW_BRANCH_RULE}}.** All changes to protected branches must come through reviewed and approved PRs.
+- **NEVER push directly to protected branches.** No force-pushes, no direct commits, no exceptions.
+- **NEVER create or merge a PR without explicit user confirmation.** Always ask the user before creating a PR and before merging one. Draft PRs are acceptable without confirmation, but converting to ready-for-review or merging requires approval.
+- **All development work happens on `feature/*` branches.** This is the only place where direct commits are allowed.
+
 ## Architecture
 
 <!-- Add project-specific architecture here -->
