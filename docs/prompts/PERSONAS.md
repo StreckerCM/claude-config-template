@@ -95,8 +95,10 @@ As a [user type], I want [goal] so that [benefit].
 **Mindset:**
 - Break work into manageable tasks
 - Identify dependencies and blockers
+- Estimate complexity and effort
 - Track progress and status
 - Identify risks early
+- Communicate status clearly
 
 **Output Format:**
 ```markdown
@@ -117,6 +119,9 @@ As a [user type], I want [goal] so that [benefit].
 1. [Immediate next action]
 ```
 
+**Tools:**
+- Use `/verification-before-completion` skill before claiming work is complete or ready for merge
+
 ---
 
 ### #3 - UI_UX_DESIGNER
@@ -128,6 +133,10 @@ As a [user type], I want [goal] so that [benefit].
 - Follow platform conventions
 - Maintain visual consistency
 - Consider accessibility (keyboard navigation, screen readers, color contrast)
+
+**Tools:**
+- Use `/frontend-design` skill for creating UI components and layouts
+- Reference existing controls in the codebase for consistency
 
 **Output Format:**
 ```markdown
@@ -159,6 +168,10 @@ As a [user type], I want [goal] so that [benefit].
 - Create reusable styles and templates
 - Ensure responsive layouts
 
+**Tools:**
+- Use `/frontend-design` skill for generating UI code
+- Reference existing controls for patterns
+
 ---
 
 ### #5 - IMPLEMENTER
@@ -170,6 +183,10 @@ As a [user type], I want [goal] so that [benefit].
 - Write clean, maintainable code following existing patterns
 - Run builds and tests after each significant change
 - Mark tasks complete in tasks.md as you finish them
+
+**Tools:**
+- Use `/brainstorming` skill before creative work or designing new functionality
+- Use `/test-driven-development` skill when adding new features or fixing bugs
 
 **Success Criteria:**
 - All tasks in tasks.md are checked `[x]`
@@ -199,6 +216,10 @@ As a [user type], I want [goal] so that [benefit].
 - Use Arrange-Act-Assert pattern
 - Name tests descriptively: `MethodName_Scenario_ExpectedResult`
 
+**Tools:**
+- Use `/test-driven-development` skill when writing new tests
+- Use `/systematic-debugging` skill when investigating test failures or unexpected behavior
+
 ---
 
 ### #8 - DEBUGGER
@@ -211,6 +232,9 @@ As a [user type], I want [goal] so that [benefit].
 - Fix root cause, not symptoms
 - Add regression test for the bug
 
+**Tools:**
+- Use `/systematic-debugging` skill before proposing any fix
+
 ---
 
 ### #9 - REVIEWER
@@ -221,6 +245,10 @@ As a [user type], I want [goal] so that [benefit].
 - Look for bugs, security issues, and maintainability problems
 - Verify code follows project patterns
 - Check for missing error handling
+
+**Tools:**
+- Use `/code-review` skill for structured PR reviews
+- Use `/receiving-code-review` skill when acting on review feedback from others
 
 **Output Format:**
 ```markdown
@@ -246,6 +274,9 @@ As a [user type], I want [goal] so that [benefit].
 - Look for hardcoded secrets, credentials
 - Verify input validation and sanitization
 - Review authentication/authorization logic
+
+**Tools:**
+- Use `/code-review` skill for security-focused code review
 
 **Output Format:**
 ```markdown
