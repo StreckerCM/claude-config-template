@@ -9,13 +9,19 @@ Standardized Claude Code configuration files for AI-assisted development across 
 | `CLAUDE.md.template` | Main Claude Code configuration with placeholders |
 | `settings.json.template` | Claude Code permissions configuration for `.claude/settings.json` |
 | `gitignore-snippet.txt` | `.gitignore` entries for Claude Code local files |
+| `docs/ARCHITECTURE.md.template` | Architecture documentation template |
 | `docs/prompts/PERSONAS.md` | 11 development personas for Ralph Loop rotation |
-| `docs/prompts/templates/ROTATING_FEATURE.md` | Ralph Loop prompt templates |
 | `docs/prompts/README.md` | Persona documentation |
+| `docs/prompts/templates/README.md` | Prompt template index |
+| `docs/prompts/templates/ROTATING_FEATURE.md` | Rotating persona feature implementation |
+| `docs/prompts/templates/IMPLEMENT_FEATURE.md` | Single-persona feature implementation |
+| `docs/prompts/templates/FIX_BUG.md` | Bug investigation and fixing |
+| `docs/prompts/templates/ADD_TESTS.md` | Adding unit tests |
+| `docs/prompts/templates/REFACTOR.md` | Code refactoring tasks |
 
 ## Setup for a New Repository
 
-### 1. Copy the template
+### 1. Copy the files
 
 ```bash
 # Clone this repo
@@ -25,11 +31,12 @@ git clone https://github.com/StreckerCM/claude-config-template.git
 cp CLAUDE.md.template /path/to/your-repo/CLAUDE.md
 mkdir -p /path/to/your-repo/docs/prompts/templates
 cp docs/prompts/PERSONAS.md /path/to/your-repo/docs/prompts/
-cp docs/prompts/templates/ROTATING_FEATURE.md /path/to/your-repo/docs/prompts/templates/
 cp docs/prompts/README.md /path/to/your-repo/docs/prompts/
+cp docs/prompts/templates/* /path/to/your-repo/docs/prompts/templates/
+cp docs/ARCHITECTURE.md.template /path/to/your-repo/docs/ARCHITECTURE.md
 ```
 
-### 2. Fill in the placeholders
+### 2. Fill in CLAUDE.md placeholders
 
 Open `CLAUDE.md` and replace all `{{PLACEHOLDER}}` variables:
 
@@ -41,39 +48,43 @@ Open `CLAUDE.md` and replace all `{{PLACEHOLDER}}` variables:
 | `{{TEST_COMMAND}}` | Test command | `dotnet test MySolution.sln` |
 | `{{MAIN_BRANCH}}` | Main/production branch | `master` or `main` |
 
-### 3. Add project-specific sections
+### 3. Fill in ARCHITECTURE.md
 
-After filling in placeholders, add:
-- Architecture / Solution Structure
-- Key Source Files
-- Key Patterns
-- Platform Constraints
-- Any project-specific conventions
+Open `docs/ARCHITECTURE.md` and replace placeholders with your project's structure:
 
-### 4. Set up permissions
+| Placeholder | Description | Example |
+|-------------|-------------|--------|
+| `{{PROJECT_NAME}}` | Main project name | `MyApp` |
+| `{{SOURCE_DIR}}` | Source directory | `src/MyApp` |
+| `{{TEST_DIR}}` | Test directory | `tests/MyApp.Tests` |
+| `{{MAIN_FILE}}` | Primary source file | `Program.cs` |
 
-Copy `settings.json.template` to `.claude/settings.json` in your repo and fill in the placeholders:
+### 4. Customize prompt templates
+
+The templates in `docs/prompts/templates/` use `{{BUILD_COMMAND}}` and `{{TEST_COMMAND}}` placeholders. Replace these with your actual build/test commands, and customize the project-specific persona details (e.g., UI framework, security concerns).
+
+### 5. Set up permissions
+
+Copy `settings.json.template` to `.claude/settings.json` and fill in placeholders:
 
 ```bash
 mkdir -p /path/to/your-repo/.claude
 cp settings.json.template /path/to/your-repo/.claude/settings.json
 ```
 
-Replace the permission placeholders:
-
 | Placeholder | Description | Example |
 |-------------|-------------|--------|
-| `{{SOURCE_DIR}}` | Path to application source code | `Application` or `src` |
+| `{{SOURCE_DIR}}` | Path to source code | `Application` or `src` |
 | `{{TEST_DIR}}` | Path to test projects | `Tests` or `test` |
-| `{{BUILD_TOOL}}` | Build tool command prefix | `dotnet` or `npm` |
-| `{{TEST_TOOL}}` | Test tool command prefix | `dotnet` or `npm` |
+| `{{BUILD_TOOL}}` | Build tool command prefix | `dotnet build *` or `npm *` |
+| `{{TEST_TOOL}}` | Test tool command prefix | `dotnet test *` or `npm test *` |
 
 **What the permissions do:**
 
 - **allow** -- Grants Claude Code access to read cross-repo files, edit source/test/config files, run build/test commands, and use git/GitHub CLI operations
 - **deny** -- Blocks editing package directories, force-pushing, hard-resetting, and recursive deletes
 
-### 5. Update .gitignore
+### 6. Update .gitignore
 
 Add the entries from `gitignore-snippet.txt` to your repo's `.gitignore`:
 
@@ -84,7 +95,7 @@ Add the entries from `gitignore-snippet.txt` to your repo's `.gitignore`:
 *.local.md
 ```
 
-This ensures `.claude/settings.json` is tracked in version control (shared across the team) while other Claude Code local files (like `CLAUDE.local.md`) are ignored.
+This ensures `.claude/settings.json` is tracked in version control while other Claude Code local files are ignored.
 
 ## Repositories Using This Template
 

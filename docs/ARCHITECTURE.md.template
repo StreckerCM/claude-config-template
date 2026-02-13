@@ -1,0 +1,45 @@
+# Architecture
+
+## Solution Structure
+
+<!-- List each project/assembly in the solution -->
+- **{{PROJECT_NAME}}** (`{{SOURCE_DIR}}/`) - Main application
+<!-- Add more projects as needed:
+- **{{PROJECT_NAME}}.Tests** (`{{TEST_DIR}}/`) - Unit tests
+- **{{LIB_NAME}}** (`path/`) - Shared library
+-->
+
+## Key Source Files
+
+| File | Purpose |
+|------|---------|
+| `{{MAIN_FILE}}` | {{MAIN_FILE_DESCRIPTION}} |
+<!-- Add key files:
+| `Models/` | Data model classes |
+| `Services/` | Business logic and services |
+| `Utilities/` | Helper functions |
+-->
+
+## Data Models
+
+<!-- Describe the core data structures -->
+| Class | Purpose |
+|-------|---------|
+| `{{MODEL_CLASS}}` | {{MODEL_DESCRIPTION}} |
+
+## UI Pattern
+
+<!-- Describe the UI architecture: MVVM, MVC, console, etc. -->
+{{UI_PATTERN_DESCRIPTION}}
+
+## Configuration Files
+
+<!-- List important config files -->
+| File | Purpose |
+|------|---------|
+| `{{CONFIG_FILE}}` | {{CONFIG_DESCRIPTION}} |
+
+## Dependencies
+
+<!-- List key NuGet packages or external dependencies -->
+- **{{PACKAGE_NAME}}** - {{PACKAGE_PURPOSE}}
