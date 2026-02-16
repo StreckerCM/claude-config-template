@@ -72,21 +72,37 @@ Flow: `feature/*` -> `development` -> `preview` -> `{{MAIN_BRANCH}}` (all via PR
 
 ## Development Workflow
 
-**MANDATORY:** Every feature branch MUST use the Ralph Loop (`/ralph-loop`) with rotating personas.
+**MANDATORY:** Every feature branch MUST use persona-driven development. No exceptions.
 
 Before writing ANY code on a feature branch:
 1. Ensure a GitHub issue exists
 2. Create `docs/features/<feature>/tasks.md` (gate -- no code without this file)
-3. Start a Ralph Loop with the rotating persona pattern
+3. Choose a loop pattern based on feature size:
+
+### Subagent Loop (Recommended for multi-phase features)
+
+Parallel persona review via the `Task` tool. Launches REVIEWER + TESTER + SECURITY as simultaneous subagents with per-persona model hints (opus for judgment, sonnet for execution, haiku for coordination).
+
+```
+Implement (sonnet) → Review in parallel (opus+sonnet+opus) → Fix → PM update → repeat
+```
+
+See `docs/prompts/templates/SUBAGENT_LOOP.md` for copy-paste prompts and full documentation.
+
+### Ralph Loop (For smaller features)
+
+Single-context rotating persona pattern via `/ralph-loop`. One persona per iteration, cycling through IMPLEMENTER → REVIEWER → TESTER → UI_UX → SECURITY → PM.
+
+See `docs/prompts/templates/ROTATING_FEATURE.md` for full Ralph Loop documentation.
 
 Commit with persona prefix: `[IMPLEMENTER]`, `[REVIEWER]`, `[TESTER]`, etc.
-Completion requires all tasks done, build + tests passing, and **2 clean cycles**.
-See `docs/prompts/README.md` and `docs/prompts/templates/ROTATING_FEATURE.md` for full details.
+Completion requires all tasks done, build + tests passing, and at least **1 clean review cycle**.
 
 ## Extended Documentation
 
 Read these files on demand (not loaded every session):
 - **Architecture:** `@docs/ARCHITECTURE.md` -- Solution structure, key files, dependencies
-- **Ralph Loop:** `@docs/prompts/README.md` -- Iterative development workflow with rotating personas
-- **Personas:** `@docs/prompts/PERSONAS.md` -- 11 development personas for Ralph Loop rotation
+- **Subagent Loop:** `@docs/prompts/templates/SUBAGENT_LOOP.md` -- Parallel persona review for multi-phase features
+- **Ralph Loop:** `@docs/prompts/README.md` -- Single-context rotating persona workflow
+- **Personas:** `@docs/prompts/PERSONAS.md` -- 11 development personas with model hints
 - **Release Process:** `@docs/RELEASE_PROCESS.md` -- Version numbering and release workflow
