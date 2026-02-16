@@ -6,7 +6,8 @@ Ready-to-use prompt templates for Ralph loops.
 
 | Template | Use For |
 |----------|---------|
-| [ROTATING_FEATURE.md](./ROTATING_FEATURE.md) | **Recommended** - Rotating personas for comprehensive feature implementation |
+| [ROTATING_FEATURE.md](./ROTATING_FEATURE.md) | Rotating personas via Ralph Loop (single-context, sequential) |
+| [SUBAGENT_LOOP.md](./SUBAGENT_LOOP.md) | **Recommended** - Parallel persona review via Task subagents (multi-phase features) |
 | [IMPLEMENT_FEATURE.md](./IMPLEMENT_FEATURE.md) | Single-persona feature implementation |
 | [FIX_BUG.md](./FIX_BUG.md) | Investigating and fixing bugs |
 | [ADD_TESTS.md](./ADD_TESTS.md) | Adding unit tests |

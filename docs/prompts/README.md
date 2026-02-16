@@ -24,6 +24,33 @@ The standard development workflow uses a 6-persona rotation:
 
 Each iteration uses `ITERATION % 6` to determine the active persona. The loop continues until all tasks are complete and 2 consecutive clean cycles pass.
 
+## Recommended: Subagent-Driven Development
+
+For multi-phase features (migration waves, large PRs), use **parallel subagents** instead of the Ralph Loop. This launches multiple review personas simultaneously via the `Task` tool, with per-persona model hints for cost efficiency.
+
+```
+Implement (sonnet) → Review in parallel (opus+sonnet+opus) → Fix → PM update → repeat
+```
+
+### Key Advantages Over Ralph Loop
+
+- **Parallel reviews** — 3 personas run simultaneously instead of sequentially
+- **Model hints** — opus for judgment (Reviewer, Security), sonnet for execution (Tester), haiku for coordination (PM)
+- **60-70% cost savings** vs. using opus for everything
+- **Better for large changes** — subagents get targeted context, not full conversation history
+
+### Quick Start
+
+1. Implement the next batch of tasks (IMPLEMENTER, sonnet)
+2. Launch 3 parallel review agents: REVIEWER (opus) + TESTER (sonnet) + SECURITY (opus)
+3. Fix all Critical/Important findings
+4. PROJECT_MANAGER (haiku) updates tasks.md with iteration log
+5. Repeat until all tasks complete and review cycle is clean
+
+See [templates/SUBAGENT_LOOP.md](./templates/SUBAGENT_LOOP.md) for the full template with copy-paste prompts.
+
+---
+
 ## Adding to a New Repository
 
 1. Copy this entire `docs/prompts/` directory to your repo
