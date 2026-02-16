@@ -18,12 +18,12 @@ PHASE 1 - TASK COMPLETION:
 PHASE 2 - ROTATING PERSONA REVIEW (cycle each iteration):
 Current Persona = ITERATION MOD 6:
 
-[0] #5 IMPLEMENTER: Complete next task, follow patterns, run build
-[1] #9 CODE REVIEWER: Review for bugs/edge cases, check patterns, fix issues
-[2] #7 TESTER: Run tests, check coverage, write missing tests
-[3] #3 UI_UX_DESIGNER: Review UI consistency, accessibility, visual states
-[4] #10 SECURITY_AUDITOR: Check config values, input validation, file I/O
-[5] #2 PROJECT_MANAGER: Verify tasks complete, check requirements, update tasks.md
+[0] #5 IMPLEMENTER (model:sonnet): Complete next task, follow patterns, run build
+[1] #9 CODE REVIEWER (model:opus): Review for bugs/edge cases, check patterns, fix issues
+[2] #7 TESTER (model:sonnet): Run tests, check coverage, write missing tests
+[3] #3 UI_UX_DESIGNER (model:sonnet): Review UI consistency, accessibility, visual states
+[4] #10 SECURITY_AUDITOR (model:opus): Check config values, input validation, file I/O
+[5] #2 PROJECT_MANAGER (model:haiku): Verify tasks complete, check requirements, update tasks.md
 
 EACH ITERATION:
 1. Identify current persona (Iteration % 6)
@@ -48,10 +48,10 @@ For simpler features:
 Feature: [FEATURE_NUMBER]-[feature-name]
 
 ROTATING PERSONA (ITERATION MOD 4):
-[0] #5 IMPLEMENTER: Complete next task from tasks.md, run build
-[1] #9 REVIEWER: Review code for bugs/issues, fix problems
-[2] #7 TESTER: Verify functionality, add tests if needed
-[3] #2 PROJECT_MANAGER: Check all requirements met, update tasks.md
+[0] #5 IMPLEMENTER (model:sonnet): Complete next task from tasks.md, run build
+[1] #9 REVIEWER (model:opus): Review code for bugs/issues, fix problems
+[2] #7 TESTER (model:sonnet): Verify functionality, add tests if needed
+[3] #2 PROJECT_MANAGER (model:haiku): Check all requirements met, update tasks.md
 
 EACH ITERATION: Run persona checks, commit '[persona] description', post PR comment.
 
@@ -68,12 +68,12 @@ For critical features requiring maximum scrutiny:
 Feature: [FEATURE_NUMBER]-[feature-name]
 
 ROTATING PERSONA (ITERATION MOD 11):
-[0] #1 BUSINESS_ANALYST    [5] #6 REFACTORER
-[1] #2 PROJECT_MANAGER     [6] #7 TESTER
-[2] #3 UI_UX_DESIGNER      [7] #8 DEBUGGER
-[3] #4 UI_IMPLEMENTER      [8] #9 REVIEWER
-[4] #5 IMPLEMENTER         [9] #10 SECURITY_AUDITOR
-                            [10] #11 DOCUMENTER
+[0] #1 BUSINESS_ANALYST (haiku)    [5] #6 REFACTORER (sonnet)
+[1] #2 PROJECT_MANAGER (haiku)     [6] #7 TESTER (sonnet)
+[2] #3 UI_UX_DESIGNER (sonnet)     [7] #8 DEBUGGER (sonnet)
+[3] #4 UI_IMPLEMENTER (sonnet)     [8] #9 REVIEWER (opus)
+[4] #5 IMPLEMENTER (sonnet)        [9] #10 SECURITY_AUDITOR (opus)
+                                    [10] #11 DOCUMENTER (haiku)
 
 OUTPUT <promise>FEATURE COMPLETE</promise> when all tasks done and clean cycle.
 " --completion-promise "FEATURE COMPLETE" --max-iterations 44
