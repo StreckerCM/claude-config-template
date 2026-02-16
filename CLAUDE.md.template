@@ -4,28 +4,21 @@ This file provides guidance to Claude Code (claude.ai/code) when working with co
 
 ## Project Overview
 
-{{PROJECT_DESCRIPTION}}
-
-**Tech Stack:** {{TECH_STACK}}
+{{PROJECT_DESCRIPTION}} | **Tech Stack:** {{TECH_STACK}}
 
 ## Build Commands
 
 ```bash
-# Build
-{{BUILD_COMMAND}}
-
-# Run tests
-{{TEST_COMMAND}}
+{{BUILD_COMMAND}}   # Build
+{{TEST_COMMAND}}    # Run tests
 ```
 
 ## CI/CD Pipeline
 
-CI runs on GitHub Actions with three workflows:
-- `.github/workflows/build.yml` — Dev CI for `development` and `feature/*` branches (build + test only)
-- `.github/workflows/preview-release.yml` — Auto pre-release on push to `preview` (build + GitHub Pre-release)
-- `.github/workflows/production-release.yml` — Auto release on push to `{{MAIN_BRANCH}}` (build + GitHub Release)
-
-### Artifact Retention Policy
+CI runs on GitHub Actions:
+- `build.yml` -- Dev CI for `development` and `feature/*` (build + test only)
+- `preview-release.yml` -- Auto pre-release on push to `preview`
+- `production-release.yml` -- Auto release on push to `{{MAIN_BRANCH}}`
 
 | Environment | Test Results | Build Artifacts | Retention |
 |-------------|-------------|-----------------|-----------|
@@ -33,204 +26,67 @@ CI runs on GitHub Actions with three workflows:
 | Preview | Always | Release package + GitHub Pre-release | 90 days |
 | Production | Always | Release package + GitHub Release | 90 days |
 
-### Version Management
+Version is managed via `Version.props` (`MajorVersion`, `MinorVersion`, `PatchVersion`).
 
-Version is managed via `Version.props` at the repo root:
-```xml
-<Project>
-  <PropertyGroup>
-    <MajorVersion>X</MajorVersion>
-    <MinorVersion>Y</MinorVersion>
-    <PatchVersion>Z</PatchVersion>
-  </PropertyGroup>
-</Project>
-```
+## Session Start Protocol
+
+At the start of every session:
+1. Read `docs/features/ACTIVE_WORK.md` if it exists
+2. Check auto memory (`MEMORY.md`) for prior context
+3. Run `git log --oneline -10` and `git status` to understand current state
+4. Ask the user what they'd like to work on before making assumptions
+
+Before ending a session or when context is getting long:
+1. Update `docs/features/ACTIVE_WORK.md` with current progress, decisions made, and next steps
+2. Save any important patterns or learnings to auto memory
 
 ## Branching Strategy
 
 ```
-{{MAIN_BRANCH}} ←──────── Stable releases (version: X.Y.Z)
-  ↑               Auto: build, test, create GitHub Release, deploy
-  │ PR merge
-  │
-preview ←──────── Pre-release testing (version: X.Y.Z-preview.N)
-  ↑               Auto: build, test, create GitHub Pre-release, deploy
-  │ PR merge
-  │
-development ←──── Integration branch (version: X.Y.Z-dev.N)
-  ↑               Auto: build + test only (no release artifacts)
-  │ PR merge
-  │
-feature/* ─────── Development work (version: X.Y.Z-dev.N)
-                  Auto: build + test only (no release artifacts)
+{{MAIN_BRANCH}} <-- Stable releases (X.Y.Z)
+  ^ PR
+preview <------ Pre-release testing (X.Y.Z-preview.N)
+  ^ PR
+development <-- Integration (X.Y.Z-dev.N)
+  ^ PR
+feature/* ----- Development work (X.Y.Z-dev.N)
 ```
 
-### Branch Guidelines
+Flow: `feature/*` -> `development` -> `preview` -> `{{MAIN_BRANCH}}` (all via PR)
 
-| Branch | Purpose | Version Format |
-|--------|---------|----------------|
-| `{{MAIN_BRANCH}}` | Production releases only | `X.Y.Z` |
-| `preview` | Pre-release testing | `X.Y.Z-preview.N` |
-| `development` | Integration before preview | `X.Y.Z-dev.N` |
-| `feature/*` | Feature development | `X.Y.Z-dev.N` |
+### Branch Protection Rules -- NEVER VIOLATE
 
-### Workflow
-1. Create feature branches from `development`
-2. PR feature branches to `development` for integration
-3. PR `development` to `preview` for pre-release testing (auto-creates GitHub Pre-release)
-4. PR `preview` to `{{MAIN_BRANCH}}` for stable release (auto-creates GitHub Release)
-
-### Branch Protection Rules — NEVER VIOLATE
-
-- **NEVER commit directly to `{{MAIN_BRANCH}}`.** All changes must come through reviewed and approved PRs from `preview`.
-- **NEVER commit directly to `preview`.** All changes must come through PRs from `development`.
-- **NEVER commit directly to `development`.** All changes must come through PRs from `feature/*` branches.
+- **NEVER commit directly to `{{MAIN_BRANCH}}`, `preview`, or `development`.** All changes must come through PRs.
 - **NEVER push directly to protected branches.** No force-pushes, no direct commits, no exceptions.
-- **NEVER create or merge a PR without explicit user confirmation.** Always ask the user before creating a PR and before merging one. Draft PRs are acceptable without confirmation, but converting to ready-for-review or merging requires approval.
-- **All development work happens on `feature/*` branches.** This is the only place where direct commits are allowed.
+- **NEVER create or merge a PR without explicit user confirmation.** Draft PRs are acceptable without confirmation.
+- **All development work happens on `feature/*` branches.** Direct commits are only allowed here.
 
 ## Architecture
-
-<!-- Add project-specific architecture here -->
-
-## Development Workflow
-
-### MANDATORY: Ralph Loop for ALL Feature Work
-
-**This is NON-NEGOTIABLE.** Every feature branch (`feature/*`) MUST use the Ralph Wiggum loop (`/ralph-loop`) with rotating personas. There are NO exceptions to this rule, regardless of how simple the task appears.
-
-**Before writing ANY code on a feature branch, you MUST:**
-
-1. Verify a `docs/features/<feature>/tasks.md` file exists
-2. If it doesn't exist, create one before proceeding
-3. Start a Ralph Loop with the rotating persona pattern
-
-**If you find yourself on a feature branch writing code without an active Ralph Loop, STOP and start one.**
-
-### Step 1: Create a GitHub Issue (if one doesn't exist)
-
-Every feature must have a corresponding GitHub issue before work begins.
-
-### Step 2: Create and Switch to a Feature Branch
-
-```bash
-git checkout development
-git pull origin development
-git checkout -b feature/<issue-number>-<short-description>
-```
-
-### Step 3: Create or Verify tasks.md (GATE - Required Before Any Code)
-
-Every feature MUST have a `docs/features/<feature>/tasks.md` file. This file is the **single source of truth** for what work needs to be done. No code should be written until this file exists and has been reviewed.
-
-**tasks.md format:**
-```markdown
-# Feature: <Feature Name>
-Issue: #<issue-number>
-Branch: feature/<issue-number>-<short-description>
-
-## Tasks
-- [ ] Task 1 description
-- [ ] Task 2 description
-- [ ] Task 3 description
-
-## Completion Criteria
-- [ ] All tasks checked
-- [ ] Build succeeds
-- [ ] Tests pass
-- [ ] 2 clean Ralph Loop cycles
-```
-
-### Step 4: Start a Ralph Loop (MANDATORY)
-
-Use the Ralph Wiggum loop with the rotating persona pattern defined in `docs/prompts/PERSONAS.md`:
-
-```bash
-/ralph-loop "
-Feature: <feature-name>
-Branch: feature/<issue-number>-<short-description>
-
-PHASE 1 - TASK COMPLETION:
-- Read docs/features/<feature>/tasks.md
-- Complete unchecked tasks, mark done with [x]
-- Run: {{BUILD_COMMAND}}
-
-PHASE 2 - ROTATING PERSONA REVIEW (ITERATION MOD 6):
-[0] #5 IMPLEMENTER: Complete next task, follow patterns
-[1] #9 REVIEWER: Review code for bugs/issues, fix problems
-[2] #7 TESTER: Verify functionality, add tests
-[3] #3 UI_UX_DESIGNER: Review UI/UX, accessibility
-[4] #10 SECURITY: Check for vulnerabilities, validate inputs
-[5] #2 PROJECT_MANAGER: Verify requirements met, update tasks
-
-EACH ITERATION:
-1. Run current persona's checks (Iteration % 6)
-2. Make fixes/improvements
-3. Commit: '[PERSONA] description'
-4. Post PR comment with findings/changes
-
-OUTPUT <promise>FEATURE COMPLETE</promise> when all tasks done and 2 clean cycles.
-" --completion-promise "FEATURE COMPLETE" --max-iterations 30
-```
-
-See the "Ralph Loop / Iterative Development" section below for the full pattern and completion criteria.
+<!-- Add project-specific architecture here, or use @docs/ARCHITECTURE.md for detailed breakdowns -->
 
 ## Key Patterns
-
 <!-- Add project-specific patterns here -->
 
 ## Platform Constraints
-
 <!-- Add project-specific constraints here -->
 
-## Ralph Loop / Iterative Development
+## Development Workflow
 
-**MANDATORY — NO EXCEPTIONS:** ALL feature branch work (`feature/*`) MUST use Ralph loops with rotating personas. This applies regardless of feature size, complexity, or urgency. Skipping the Ralph Loop is never acceptable.
+**MANDATORY:** Every feature branch MUST use the Ralph Loop (`/ralph-loop`) with rotating personas.
 
-### Pre-Flight Checklist (Before Starting Ralph Loop)
+Before writing ANY code on a feature branch:
+1. Ensure a GitHub issue exists
+2. Create `docs/features/<feature>/tasks.md` (gate -- no code without this file)
+3. Start a Ralph Loop with the rotating persona pattern
 
-Before starting any Ralph Loop, verify:
+Commit with persona prefix: `[IMPLEMENTER]`, `[REVIEWER]`, `[TESTER]`, etc.
+Completion requires all tasks done, build + tests passing, and **2 clean cycles**.
+See `docs/prompts/README.md` and `docs/prompts/templates/ROTATING_FEATURE.md` for full details.
 
-- [ ] GitHub issue exists for this feature
-- [ ] Feature branch created from `development`
-- [ ] `docs/features/<feature>/tasks.md` exists with task breakdown
-- [ ] PR created (draft is fine) to track work
+## Extended Documentation
 
-If any of these are missing, create them first. **Do NOT start coding without tasks.md.**
-
-### Required Persona Rotation
-
-```
-Iteration % 6 determines the current persona:
-
-[0] #5 IMPLEMENTER   - Complete tasks, write code
-[1] #9 REVIEWER      - Review for bugs, code quality
-[2] #7 TESTER        - Verify functionality, add tests
-[3] #3 UI_UX_DESIGNER - Review UI/UX, accessibility
-[4] #10 SECURITY     - Security review, input validation
-[5] #2 PROJECT_MGR   - Check requirements, update tasks
-```
-
-### Each Iteration Must:
-1. Identify the current persona based on iteration number
-2. Follow that persona's mindset and output format from `docs/prompts/PERSONAS.md`
-3. Commit with persona prefix: `[IMPLEMENTER]`, `[REVIEWER]`, etc.
-4. Reference the feature's `tasks.md` file and mark tasks complete
-5. Post a PR comment summarizing findings and changes
-
-### Completion Criteria
-- All tasks in `docs/features/[feature]/tasks.md` marked complete
-- Build succeeds with no errors
-- Tests pass
-- **2 clean cycles** (all 6 personas find no issues twice)
-
-### Why This Matters
-
-The Ralph Loop ensures:
-- Multiple perspectives review every change (code quality, security, UX, testing)
-- Issues are caught early through systematic rotation
-- Progress is tracked via tasks.md
-- An audit trail exists via PR comments from each persona
-- Features meet a consistent quality bar before merging
-
-See `docs/prompts/README.md` and `docs/prompts/templates/ROTATING_FEATURE.md` for full documentation.
+Read these files on demand (not loaded every session):
+- **Architecture:** `@docs/ARCHITECTURE.md` -- Solution structure, key files, dependencies
+- **Ralph Loop:** `@docs/prompts/README.md` -- Iterative development workflow with rotating personas
+- **Personas:** `@docs/prompts/PERSONAS.md` -- 11 development personas for Ralph Loop rotation
+- **Release Process:** `@docs/RELEASE_PROCESS.md` -- Version numbering and release workflow
