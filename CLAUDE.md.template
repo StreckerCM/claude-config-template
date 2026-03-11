@@ -54,6 +54,8 @@ feature/* ----- Development work (X.Y.Z-dev.N)
 
 Flow: `feature/*` -> `development` -> `preview` -> `{{MAIN_BRANCH}}` (all via PR)
 
+**After every production release:** Bump `Version.props` on `development` so the next preview/release has a HIGHER version number. Never publish with the same version as a previous release.
+
 ### Branch Protection Rules -- NEVER VIOLATE
 
 - **NEVER commit directly to `{{MAIN_BRANCH}}`, `preview`, or `development`.** All changes must come through PRs.
